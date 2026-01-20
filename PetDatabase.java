@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,16 +16,8 @@ public class PetDatabase {
         int choice = 0;
         while (choice != 7) {
             // Menu display
-            System.out.println("\n\n\n");
-            System.out.println("What would you like to do?");
-            System.out.println("1) View all pets");
-            System.out.println("2) Add more pets");
-            System.out.println("3) Update an existing pet");
-            System.out.println("4) Remove an existing pet");
-            System.out.println("5) Search pets by name");
-            System.out.println("6) Search pets by age");
-            System.out.println("7) Exit program");
-            System.out.printf("Your choice: ");
+            displayMenu();
+            // Get user choice
             choice = scnr.nextInt();
             switch (choice) {
                 // Testing first
@@ -77,13 +70,79 @@ public class PetDatabase {
 
                 // Update an existing pet
                 case 3: {
-                    System.out.println("Updating an existing pet...");
+                    // Clear buffer
+                    scnr.nextLine();
+
+                    // Display current pets
+                    int count = 0; // Row count
+
+                    // Header
+                    System.out.println("+-------------------------+");
+                    System.out.println("| ID  | Name       | Age  |");
+                    System.out.println("+-------------------------+");
+
+                    // Inserting pet data into table
+                    for (int i = 0; i < pets.size(); i++) {
+                        int id = i, age = pets.get(i).getAge();
+                        String name = pets.get(i).getName();
+                        System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
+                        count++;
+                    }
+                    System.out.println("+-------------------------+");
+
+                    // Footer with row count
+                    System.out.println(count + " rows in set.");
+                    
+                    // Prompt for pet ID to update
+                    System.out.printf("Enter the ID of the pet to update: ");
+                    int updateId = scnr.nextInt();
+
+                    scnr.nextLine(); // Clear buffer
+
+                    // Prompt for new name and age
+                    System.out.printf("Update with (name, age): ");
+
+                    // Get the new name and age and update pet
+                    String updateInput = scnr.nextLine();
+                    String[] updateNameAge = updateInput.split(" ");
+                    String newName = updateNameAge[0];
+                    int newAge = Integer.parseInt(updateNameAge[1]);
+                    pets.get(updateId).setName(newName);
+                    pets.get(updateId).setAge(newAge);
+                    System.out.println("Pet updated successfully.");
                     break;
                 }
 
                 // Remove an existing pet
                 case 4: {
-                    System.out.println("Removing an existing pet...");
+                    // Clear buffer
+                    scnr.nextLine();
+
+                    // Display current pets
+                    int count = 0; // Row count
+
+                    // Header
+                    System.out.println("+-------------------------+");
+                    System.out.println("| ID  | Name       | Age  |");
+                    System.out.println("+-------------------------+");
+
+                    // Inserting pet data into table
+                    for (int i = 0; i < pets.size(); i++) {
+                        int id = i, age = pets.get(i).getAge();
+                        String name = pets.get(i).getName();
+                        System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
+                        count++;
+                    }
+                    System.out.println("+-------------------------+");
+
+                    // Footer with row count
+                    System.out.println(count + " rows in set.");
+
+                    // Prompt for pet ID to remove and remove pet
+                    System.out.printf("Enter the ID of the pet to remove: ");
+                    int removeId = scnr.nextInt();
+                    pets.remove(removeId);
+                    System.out.println("Pet removed successfully.");
                     break;
                 }
 
@@ -153,5 +212,18 @@ public class PetDatabase {
             }
         }
         scnr.close();
+    }
+
+    public static void displayMenu() {
+        System.out.println("\n\n\n");
+        System.out.println("What would you like to do?");
+        System.out.println("1) View all pets");
+        System.out.println("2) Add more pets");
+        System.out.println("3) Update an existing pet");
+        System.out.println("4) Remove an existing pet");
+        System.out.println("5) Search pets by name");
+        System.out.println("6) Search pets by age");
+        System.out.println("7) Exit program");
+        System.out.printf("Your choice: ");
     }
 }
