@@ -28,6 +28,8 @@ public class PetDatabase {
             choice = scnr.nextInt();
             switch (choice) {
                 // Testing first
+
+                // View all pets
                 case 1: {
                     int count = 0; // Row count
 
@@ -49,6 +51,8 @@ public class PetDatabase {
                     System.out.println(count + " rows in set.");
                     break;
                 }
+
+                // Add more pets
                 case 2: {
                     scnr.nextLine(); // Clear buffer
                     while (true) {
@@ -56,7 +60,7 @@ public class PetDatabase {
                         String nameAgeInput = ""; 
                         System.out.printf("add pet (name, age): ");
                         nameAgeInput = scnr.nextLine();
-                        
+
                         // Exit condition if user puts "done"
                         if (nameAgeInput.equals("done")) {
                             break;
@@ -70,22 +74,78 @@ public class PetDatabase {
                     }
                     break;
                 }
+
+                // Update an existing pet
                 case 3: {
                     System.out.println("Updating an existing pet...");
                     break;
                 }
+
+                // Remove an existing pet
                 case 4: {
                     System.out.println("Removing an existing pet...");
                     break;
                 }
+
+                // Search pets by name
                 case 5: {
-                    System.out.println("Searching pets by name...");
+                    // Clear buffer
+                    scnr.nextLine();
+
+                    // Prompt for name to search
+                    System.out.printf("Enter name to search: ");
+                    String searchName = scnr.nextLine();
+
+                    int count = 0; // Row count
+
+                    // Header
+                    System.out.println("+-------------------------+");
+                    System.out.println("| ID  | Name       | Age  |");
+                    System.out.println("+-------------------------+");
+
+                    // Insert matching pet data into table
+                    for (int i = 0; i < pets.size(); i++) {
+                        if (pets.get(i).getName().toUpperCase().equals(searchName.toUpperCase())) {
+                            int id = i, age = pets.get(i).getAge();
+                            String name = pets.get(i).getName();
+                            System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
+                        }
+                    }
+                    System.out.println("+-------------------------+");
+                    System.out.println(count + " rows in set.");
                     break;
                 }
+
+                // Search pets by age
                 case 6: {
-                    System.out.println("Searching pets by age...");
+                    // Clear buffer
+                    scnr.nextLine();
+
+                    // Prompt for age to search
+                    System.out.printf("Enter age to search: ");
+                    int searchAge = scnr.nextInt();
+
+                    int count = 0; // Row count
+
+                    // Header
+                    System.out.println("+-------------------------+");
+                    System.out.println("| ID  | Name       | Age  |");
+                    System.out.println("+-------------------------+");
+
+                    // Insert matching pet data into table
+                    for (int i = 0; i < pets.size(); i++) {
+                        if (pets.get(i).getAge() == searchAge) {
+                            int id = i, age = pets.get(i).getAge();
+                            String name = pets.get(i).getName();
+                            System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
+                        }
+                    }
+                    System.out.println("+-------------------------+");
+                    System.out.println(count + " rows in set.");
                     break;
                 }
+
+                // Exit program
                 case 7: {
                     System.out.println("Exiting program...");
                     break;
