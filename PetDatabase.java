@@ -1,9 +1,11 @@
-import java.lang.reflect.Array;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PetDatabase {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // Scanner for user input
         Scanner scnr = new Scanner(System.in);
 
@@ -13,6 +15,18 @@ public class PetDatabase {
         pets.add(new Pet("Hyper", 5));
         pets.add(new Pet("Bob", 2));
 
+        // Read from petsData.txt and populate pet database
+        FileInputStream in = new FileInputStream("petsData.txt");
+        Scanner fileScnr = new Scanner(in);
+        while (fileScnr.hasNextLine()) {
+            String line = fileScnr.nextLine();
+            String[] nameAge = line.split(" ");
+            String name = nameAge[0];
+            int age = Integer.parseInt(nameAge[1]);
+            pets.add(new Pet(name, age));
+        }
+        fileScnr.close();
+
         int choice = 0;
         while (choice != 7) {
             // Menu display
@@ -20,28 +34,10 @@ public class PetDatabase {
             // Get user choice
             choice = scnr.nextInt();
             switch (choice) {
-                // Testing first
-
                 // View all pets
                 case 1: {
-                    int count = 0; // Row count
-
-                    // Header
-                    System.out.println("+-------------------------+");
-                    System.out.println("| ID  | Name       | Age  |");
-                    System.out.println("+-------------------------+");
-
-                    // Inserting pet data into table
-                    for (int i = 0; i < pets.size(); i++) {
-                        int id = i, age = pets.get(i).getAge();
-                        String name = pets.get(i).getName();
-                        System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
-                        count++;
-                    }
-                    System.out.println("+-------------------------+");
-
-                    // Footer with row count
-                    System.out.println(count + " rows in set.");
+                    // Display current pets
+                    displayPets(pets);
                     break;
                 }
 
@@ -50,7 +46,7 @@ public class PetDatabase {
                     scnr.nextLine(); // Clear buffer
                     while (true) {
                         // Prompt for new pet info
-                        String nameAgeInput = ""; 
+                        String nameAgeInput = "";
                         System.out.printf("add pet (name, age): ");
                         nameAgeInput = scnr.nextLine();
 
@@ -74,25 +70,8 @@ public class PetDatabase {
                     scnr.nextLine();
 
                     // Display current pets
-                    int count = 0; // Row count
+                    displayPets(pets);
 
-                    // Header
-                    System.out.println("+-------------------------+");
-                    System.out.println("| ID  | Name       | Age  |");
-                    System.out.println("+-------------------------+");
-
-                    // Inserting pet data into table
-                    for (int i = 0; i < pets.size(); i++) {
-                        int id = i, age = pets.get(i).getAge();
-                        String name = pets.get(i).getName();
-                        System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
-                        count++;
-                    }
-                    System.out.println("+-------------------------+");
-
-                    // Footer with row count
-                    System.out.println(count + " rows in set.");
-                    
                     // Prompt for pet ID to update
                     System.out.printf("Enter the ID of the pet to update: ");
                     int updateId = scnr.nextInt();
@@ -119,24 +98,7 @@ public class PetDatabase {
                     scnr.nextLine();
 
                     // Display current pets
-                    int count = 0; // Row count
-
-                    // Header
-                    System.out.println("+-------------------------+");
-                    System.out.println("| ID  | Name       | Age  |");
-                    System.out.println("+-------------------------+");
-
-                    // Inserting pet data into table
-                    for (int i = 0; i < pets.size(); i++) {
-                        int id = i, age = pets.get(i).getAge();
-                        String name = pets.get(i).getName();
-                        System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
-                        count++;
-                    }
-                    System.out.println("+-------------------------+");
-
-                    // Footer with row count
-                    System.out.println(count + " rows in set.");
+                    displayPets(pets);
 
                     // Prompt for pet ID to remove and remove pet
                     System.out.printf("Enter the ID of the pet to remove: ");
@@ -211,6 +173,7 @@ public class PetDatabase {
                 }
             }
         }
+        saveToPetsFile(pets);
         scnr.close();
     }
 
@@ -225,5 +188,37 @@ public class PetDatabase {
         System.out.println("6) Search pets by age");
         System.out.println("7) Exit program");
         System.out.printf("Your choice: ");
+    }
+
+    // Display pets in tabular format
+    public static void displayPets(ArrayList<Pet> pets) {
+        int count = 0; // Row count
+
+        // Header
+        System.out.println("+-------------------------+");
+        System.out.println("| ID  | Name       | Age  |");
+        System.out.println("+-------------------------+");
+
+        // Inserting pet data into table
+        for (int i = 0; i < pets.size(); i++) {
+            int id = i, age = pets.get(i).getAge();
+            String name = pets.get(i).getName();
+            System.out.printf("| %-3s | %-10s | %-4s |\n", id, name, age);
+            count++;
+        }
+        System.out.println("+-------------------------+");
+
+        // Footer with row count
+        System.out.println(count + " rows in set.");
+    }
+
+    // Save into petsData.txt
+    public static void saveToPetsFile(ArrayList<Pet> pets) throws IOException {
+        FileOutputStream out = new FileOutputStream("petsData.txt");
+        for (int i = 0; i < pets.size(); i++) {
+            String pet = pets.get(i).getName() + " " + pets.get(i).getAge() + "\n";
+            out.write(pet.getBytes());
+        }
+        out.close();
     }
 }
